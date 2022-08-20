@@ -1,6 +1,9 @@
 package com.bridgelabz.addressbookspringboot.service;
 
+import com.bridgelabz.addressbookspringboot.dto.AddressBookRequestDto;
 import com.bridgelabz.addressbookspringboot.entity.Contacts;
+import com.bridgelabz.addressbookspringboot.repository.AddressBookRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,38 +14,41 @@ import java.util.Map;
 @Service
 public class AddressBookServiceImpl implements IEAddressBookService {
 
-    Map<Integer,Contacts> integerContactsMap=new HashMap<>();
-    ArrayList<Contacts> contactsArrayList=new ArrayList<>();
-    @Override
-    public Contacts addAndSave(Contacts contacts) {
-        integerContactsMap.put(contacts.getPersonId(),contacts);
-        System.out.println(integerContactsMap);
-        return contacts;
+    @Autowired
+    private AddressBookRepository addressBookRepository;
 
-     }
-
-     public List<Contacts> getContacts(){
-        return integerContactsMap.entrySet().stream().map(a->a.getValue()).toList();
-
-     }
 
     @Override
-    public Contacts getById(int id) {
-        return integerContactsMap.get(id);
-    }
-
-    @Override
-    public Contacts edit(int id, Contacts contacts) {
-        Contacts contacts1=integerContactsMap.get(id);
-        contacts1.updateContacts(contacts);
-        return contacts1;
+    public Contacts addContact(AddressBookRequestDto addressBookRequestDto) {
+        Contacts contacts=new Contacts(addressBookRequestDto);
+        return addressBookRepository.save(contacts);
 
     }
 
+//    public List<AddressBookRequestDto> addListOfContacts(List<AddressBookRequestDto> addressBookRequestDtos){
+//        return addressBookRepository.saveAll(addressBookRequestDtos);
     @Override
-    public Contacts deleteByid(int id) {
-        return integerContactsMap.remove(id);
+    public List<Contacts> getAll()
+    {
+        return addressBookRepository.findAll();
     }
 
+    @Override
+    public Contacts getAddressBookById(int id) {
+        return addressBookRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Contacts edit(int id, AddressBookRequestDto addressBookRequestDto) {
+        Contacts contacts=this.getAddressBookById(id);
+        contacts.updateContacts(addressBookRequestDto);
+        return addressBookRepository.save(contacts);
+    }
+
+    @Override
+    public String delete(int id) {
+         addressBookRepository.deleteById(id);
+         return "Contacts deleted successfully";
+    }
 
 }

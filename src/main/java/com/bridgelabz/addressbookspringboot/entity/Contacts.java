@@ -1,6 +1,7 @@
 package com.bridgelabz.addressbookspringboot.entity;
 
 
+import com.bridgelabz.addressbookspringboot.dto.AddressBookRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,21 +23,28 @@ public class Contacts {
     @Column(name = "last_name")
     private String lastName;
     private String mobileNo;
-    private String address;
-    private String city;
-    private String state;
-    private String zipNo;
 
 
-    public void updateContacts(Contacts contacts){
-        this.firstName=contacts.getFirstName();
-        this.lastName=contacts.getLastName();
-        this.mobileNo=contacts.getMobileNo();
-        this.address=contacts.getAddress();
-        this.city=contacts.getCity();
-        this.state=contacts.getState();
-        this.zipNo=contacts.getZipNo();
+//    private String address;
+//    private String city;
+//    private String state;
+//    private String zipNo;
 
+
+    public void updateContacts(AddressBookRequestDto addressBookRequestDto){
+        this.firstName=addressBookRequestDto.getFirstName();
+        this.lastName=addressBookRequestDto.getLastName();
+        this.mobileNo=addressBookRequestDto.getMobileNo();
+//        this.address=addressBookRequestDto.getAddress();
+//        this.city=addressBookRequestDto.getCity();
+//        this.state=addressBookRequestDto.getState();
+//        this.zipNo=addressBookRequestDto.getZipNo();
+
+    }
+    public Contacts(AddressBookRequestDto addressBookRequestDto) {
+        this.firstName=addressBookRequestDto.getFirstName();
+        this.lastName=addressBookRequestDto.getLastName();
+        this.mobileNo=addressBookRequestDto.getMobileNo();
     }
 
 
