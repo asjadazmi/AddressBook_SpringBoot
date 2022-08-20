@@ -18,22 +18,22 @@ public class AddressBookController {
     public Contacts addAddressBook(@RequestBody Contacts contacts){
         return addressBookService.addAndSave(contacts);
     }
-
-    @GetMapping("/getallcontacts")
-    public List<Contacts> getAll(){
-        return addressBookService.getAllContacts();
+    @GetMapping("/get")
+    public List<Contacts> getContacts(){
+        return addressBookService.getContacts();
     }
 
-    @GetMapping("/getbyid/{id}")
-    public Contacts getContByid(@PathVariable int id){
-        return addressBookService.getContactsByid(id);
+    @GetMapping("/getid/{id}")
+    public Contacts getContacts(@PathVariable int id){
+        return addressBookService.getById(id);
     }
-
     @PutMapping("/update/{id}")
-    public Contacts editByidAndContacts(@PathVariable int id,@RequestBody Contacts contacts){
+    public Contacts updateByid(@PathVariable int id, @RequestBody Contacts contacts){
         return addressBookService.edit(id,contacts);
     }
-
-
-
+    @DeleteMapping("/del/{id}")
+    public String deleteByid(@PathVariable int id){
+        addressBookService.deleteByid(id);
+        return "Contacts deleted Successfully";
+    }
 }
