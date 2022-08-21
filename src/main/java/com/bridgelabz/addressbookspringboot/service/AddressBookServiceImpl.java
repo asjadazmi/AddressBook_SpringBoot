@@ -2,6 +2,7 @@ package com.bridgelabz.addressbookspringboot.service;
 
 import com.bridgelabz.addressbookspringboot.dto.AddressBookRequestDto;
 import com.bridgelabz.addressbookspringboot.entity.Contacts;
+import com.bridgelabz.addressbookspringboot.exception.UserNotFound;
 import com.bridgelabz.addressbookspringboot.repository.AddressBookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,20 +35,27 @@ public class AddressBookServiceImpl implements IEAddressBookService {
     }
 
     @Override
-    public Contacts getAddressBookById(int id) {
-        return addressBookRepository.findById(id).orElse(null);
+    public Contacts getAddressBookById(int id) throws UserNotFound {
+        Contacts contacts= addressBookRepository.findById(id).orElse(null);
+        if(contacts!=null){
+            return contacts;
+        }else{
+            throw new UserNotFound("USER NOT FOUND FOR THIS ID "+id);
+        }
     }
 
     @Override
-    public Contacts edit(int id, AddressBookRequestDto addressBookRequestDto) {
+    public Contacts edit(int id, AddressBookRequestDto addressBookRequestDto) throws UserNotFound {
         Contacts contacts=this.getAddressBookById(id);
         contacts.updateContacts(addressBookRequestDto);
         return addressBookRepository.save(contacts);
     }
 
     @Override
-    public String delete(int id) {
-         addressBookRepository.deleteById(id);
+    public String delete(int id) throws UserNotFound {
+        Contacts contacts=this.getAddressBookById(id);
+
+         addressBookRepository.deleteById(contacts.getPersonId());
          return "Contacts deleted successfully";
     }
 
